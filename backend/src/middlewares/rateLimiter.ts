@@ -15,7 +15,7 @@ export const aiRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req: Request): string => {
-    return req.auth?.userId || req.ip || 'unknown';
+    return req.authInfo!.userId || req.ip || 'unknown';
   },
   message: {
     error: 'Too many AI requests',

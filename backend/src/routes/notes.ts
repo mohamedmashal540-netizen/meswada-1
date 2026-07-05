@@ -16,7 +16,7 @@ router.get('/', (async (req: Request, res: Response, next: NextFunction) => {
     const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
     const pageSize = req.query.pageSize ? parseInt(req.query.pageSize as string, 10) : undefined;
 
-    const result = await notesService.findAllByUserId(req.auth!.userId, {
+    const result = await notesService.findAllByUserId(req.authInfo!.userId, {
       search: q,
       page,
       pageSize,
@@ -32,7 +32,7 @@ router.get('/', (async (req: Request, res: Response, next: NextFunction) => {
 router.post('/', (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = createNoteSchema.parse(req.body);
-    const note = await notesService.create(req.auth!.userId, data);
+    const note = await notesService.create(req.authInfo!.userId, data);
     res.status(201).json({ note });
   } catch (error) {
     next(error);
@@ -43,7 +43,7 @@ router.post('/', (async (req: Request, res: Response, next: NextFunction) => {
 router.get('/:id', (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-    const note = await notesService.findByIdAndUserId(id, req.auth!.userId);
+    const note = await notesService.findByIdAndUserId(id, req.authInfo!.userId);
     res.json({ note });
   } catch (error) {
     next(error);
@@ -55,7 +55,7 @@ router.patch('/:id', (async (req: Request, res: Response, next: NextFunction) =>
   try {
     const data = updateNoteSchema.parse(req.body);
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-    const note = await notesService.update(id, req.auth!.userId, data);
+    const note = await notesService.update(id, req.authInfo!.userId, data);
     res.json({ note });
   } catch (error) {
     next(error);
@@ -66,7 +66,7 @@ router.patch('/:id', (async (req: Request, res: Response, next: NextFunction) =>
 router.delete('/:id', (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-    await notesService.delete(id, req.auth!.userId);
+    await notesService.delete(id, req.authInfo!.userId);
     res.status(204).send();
   } catch (error) {
     next(error);

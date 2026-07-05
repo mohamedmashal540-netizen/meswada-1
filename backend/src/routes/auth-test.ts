@@ -8,8 +8,8 @@ router.get('/me', requireAuth, (async (req: Request, res: Response, next: NextFu
   try {
     res.json({
       message: 'Authentication successful',
-      userId: req.auth!.userId,
-      sessionId: req.auth!.sessionId,
+      userId: req.authInfo!.userId,
+      sessionId: req.authInfo!.sessionId,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

@@ -16,7 +16,7 @@ router.use(aiRateLimiter);
 router.post('/summarize', (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = summarizeSchema.parse(req.body);
-    const result = await aiService.summarize(req.auth!.userId, data);
+    const result = await aiService.summarize(req.authInfo!.userId, data);
     res.json(result);
   } catch (error) {
     next(error);
@@ -27,7 +27,7 @@ router.post('/summarize', (async (req: Request, res: Response, next: NextFunctio
 router.post('/rewrite', (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = rewriteSchema.parse(req.body);
-    const result = await aiService.rewrite(req.auth!.userId, data);
+    const result = await aiService.rewrite(req.authInfo!.userId, data);
     res.json(result);
   } catch (error) {
     next(error);
@@ -38,7 +38,7 @@ router.post('/rewrite', (async (req: Request, res: Response, next: NextFunction)
 router.post('/translate', (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = translateSchema.parse(req.body);
-    const result = await aiService.translate(req.auth!.userId, data);
+    const result = await aiService.translate(req.authInfo!.userId, data);
     res.json(result);
   } catch (error) {
     next(error);

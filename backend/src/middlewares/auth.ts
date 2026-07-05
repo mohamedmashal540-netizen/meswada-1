@@ -24,7 +24,7 @@ export async function requireAuth(
     }
 
     // Attach auth info to request for consistency with existing code
-    req.auth = { 
+    req.authInfo = {
       userId: auth.userId,
       sessionId: auth.sessionId,
     };
