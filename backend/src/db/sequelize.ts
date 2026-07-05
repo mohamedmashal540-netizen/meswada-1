@@ -19,12 +19,9 @@ export async function initializeDatabase() {
   try {
     await sequelize.authenticate();
     console.log('✅ Database connection established successfully.');
-    
-    // Sync models in development (creates tables if they don't exist)
-    if (config.nodeEnv === 'development') {
-      await sequelize.sync({ alter: false });
-      console.log('✅ Database models synchronized.');
-    }
+
+    await sequelize.sync({ alter: false });
+    console.log('✅ Database models synchronized.');
   } catch (error) {
     console.error('❌ Unable to connect to the database:', error);
     throw error;
