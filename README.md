@@ -27,6 +27,29 @@ npm run dev             # بيشتغل على http://localhost:5173
 
 الفرونت متظبط يكلم الباك على `http://localhost:3001` بشكل افتراضي (`VITE_API_BASE_URL` في `.env` لو عايز تغيّره).
 
+## النشر على Vercel
+
+أفضل إعداد حاليًا هو فصل المشروع إلى مشروعين على Vercel:
+
+1. `frontend` كمشروع Vercel static/SPA.
+2. `backend` لا يُنشر على Vercel بالشكل الحالي لأنه يعتمد على Express listener وSQLite المحلي، وده غير مناسب للتخزين الدائم على serverless.
+
+### إعداد الفرونت
+- Root Directory: `frontend`
+- Build Command: `npm run build`
+- Output: Vite الافتراضي
+- Environment Variables:
+	- `VITE_CLERK_PUBLISHABLE_KEY`
+	- `VITE_API_BASE_URL` = رابط الباك المنشور فعليًا
+
+### إعداد الباك
+- استخدم خدمة مناسبة لـ Node/Express مع تخزين دائم مثل Render أو Railway أو Fly.io.
+- لو مصرّ على Vercel، لازم أولًا تنقل قاعدة البيانات من SQLite إلى Postgres وتحوّل الباك إلى serverless-compatible handlers.
+
+### الملفات المضافة للمساعدة
+- `frontend/vercel.json` لتشغيل SPA routes بشكل صحيح عند الـ refresh.
+- `frontend/.env.example` و `backend/.env.example` كنماذج آمنة للمتغيرات المطلوبة.
+
 ## متطلبات الـ .env في الباك (backend/.env)
 لازم تحطها بنفسك (مش موجودة هنا لأسباب أمان):
 - `CLERK_SECRET_KEY`
