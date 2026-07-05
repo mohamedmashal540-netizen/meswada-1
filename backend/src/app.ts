@@ -1,0 +1,41 @@
+import express, { Express } from 'express';
+import cors from 'cors';
+import { clerkMiddleware } from '@clerk/express';
+import { config } from './config/env';
+import { errorHandler } from './middlewares/errorHandler';
+import healthRouter from './routes/health';
+import authTestRouter from './routes/auth-test';
+import notesRouter from './routes/notes';
+import aiRouter from './routes/ai';
+
+export function createApp(): Express {
+  const app = express();
+
+  // Middleware
+  app.use(cors({
+    origin: (origin, callback) => {
+      // Allow non-browser requests (no origin header, e.g. curl/health checks)
+      if (!origin || config.frontendOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: origin ${origin} is not allowed`));
+      }
+    },
+    credentials: true,
+  }));
+  app.use(express.json());
+  
+  // Clerk authentication middleware
+  app.use(clerkMiddleware());
+
+  // Routes
+  app.use('/', healthRouter);
+  app.use('/api/auth', authTestRouter); // Test auth endpoint
+  app.use('/api/notes', notesRouter);
+  app.use('/api/ai', aiRouter);
+
+  // Error handling (must be last)
+  app.use(errorHandler);
+
+  return app;
+}
